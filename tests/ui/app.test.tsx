@@ -117,6 +117,11 @@ describe('dispatch planner', () => {
     expect(within(tripTable).getAllByText('Demo Desalination Plant A (south)').length).toBeGreaterThan(0);
   });
 
+  it('runs immediately from a shared ?run=1 link', () => {
+    renderApp('/planner?run=1', buildDemoDataset(todayIso()));
+    expect(screen.getByRole('heading', { name: 'Trip list' })).toBeInTheDocument();
+  });
+
   it('rejects non-numeric parameters', async () => {
     const user = userEvent.setup();
     renderApp('/planner', buildDemoDataset(todayIso()));

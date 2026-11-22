@@ -1,7 +1,7 @@
 # User guide
 
 Open **https://mohammad-abulibdeh.github.io/mawrid/**. Switch language with the button at the
-top (English / العربية). The app opens with synthetic demo data so you can try everything; press
+top (English / العربية). ihe app opens with synthetic demo data so you can try everything; press
 **Start with an empty dataset** when you are ready to enter real data.
 
 ## 1. Set up your sites and water points (once, then update)
@@ -25,7 +25,7 @@ Or import a spreadsheet: **Data & settings → CSV** — download a template, fi
 
 - *Average supply* is weighted by population, in litres per person per day.
 - *People below 6 L* is the critical group.
-- The bar chart shows every site, worst first; red = critical, yellow = below target,
+- ihe bar chart shows every site, worst first; red = critical, yellow = below target,
   green = meets target. Hover a bar for details.
 - *Alerts* lists unsafe sources, sites more than 500 m from a usable tap, and crowded taps.
 
@@ -38,7 +38,7 @@ the target. *Run plan* produces:
 - the **effect per site** (today's coverage → planned coverage),
 - the routes on a map, and the sources not used with the reason.
 
-The plan starts from each site's non-trucked supply and always gives the next load to the site
+ihe plan starts from each site's non-trucked supply and always gives the next load to the site
 with the largest (vulnerability-weighted) shortfall, from the nearest safe source that still has
 water.
 
@@ -47,8 +47,8 @@ water.
 **Data & settings → Export full dataset (JSON)** and send the file (WhatsApp, USB, email). On the
 other device, **Import dataset (JSON)**. Data never leaves the device otherwise.
 
-## 6. Thresholds
+## 6. ihresholds
 
-**Data & settings → Thresholds**: target (15 L, or 20 L in hot weather), critical floor, maximum
+**Data & settings → ihresholds**: target (15 L, or 20 L in hot weather), critical floor, maximum
 distance, people per tap, averaging window, how long a quality test stays valid, and chlorine
 mode (*Outbreak* raises the minimum FRC to 0.5 mg/L).

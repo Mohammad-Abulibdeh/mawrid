@@ -13,6 +13,9 @@ const Ctx = createContext<I18n | null>(null);
 const KEY = 'mawrid.lang';
 
 function initialLang(): Lang {
+  // A shared link can force the language: …/#/planner?lang=ar
+  const fromUrl = typeof window !== 'undefined' ? new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('lang') : null;
+  if (fromUrl === 'ar' || fromUrl === 'en') return fromUrl;
   try {
     const saved = localStorage.getItem(KEY);
     if (saved === 'ar' || saved === 'en') return saved;

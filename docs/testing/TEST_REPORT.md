@@ -2,7 +2,7 @@
 
 Date: 2026-11-23 · Commit range: M1–M5 · Runner: Vitest 2.1.8 (jsdom), Node 22 in CI.
 
-## Automated tests — 54 passing
+## Automated tests — 55 passing
 
 | Suite | File | Tests | What it covers |
 |---|---|---|---|
@@ -10,7 +10,7 @@ Date: 2026-11-23 · Commit range: M1–M5 · Runner: Vitest 2.1.8 (jsdom), Node 
 | Analytics | `tests/domain/analytics.test.ts` | 9 | Haversine distance, 7-day averaging with zero days, bands, per-capita/gap, unsafe points excluded from access, priority ranking, summary KPIs, daily series |
 | Planner | `tests/domain/planner.test.ts` | 11 | Max-min fairness, equalisation, target stop, source capacity + `sourcesExhausted`, exclusion of down/unsafe/tap/untested sources, haul limit, nearest source, vulnerability tie-break, no over-serving, plans from non-trucked baseline, demo-scale improvement without exceeding capacity |
 | Data | `tests/domain/data.test.ts` | 18 | CSV round-trip (quotes/newlines/BOM/CRLF), formula-injection neutralisation, strict ISO dates, form/CSV validation, Gaza bounds, references and future dates, dataset import with error report, schema version, CSV import for every entity, documented example files, demo determinism and self-validation |
-| UI integration | `tests/ui/app.test.tsx` | 7 | Dashboard KPIs + demo banner + unsafe-source alert; empty state; full **site → water point → delivery** workflow incl. validation errors and coverage band change; unsafe quality result; planner trip list never using unsafe source; parameter validation; Arabic RTL rendering |
+| UI integration | `tests/ui/app.test.tsx` | 8 | Dashboard KPIs + demo banner + unsafe-source alert; empty state; full **site → water point → delivery** workflow incl. validation errors and coverage band change; unsafe quality result; planner trip list never using unsafe source; shared `?run=1` link; parameter validation; Arabic RTL rendering |
 
 ## Coverage (domain layer, `src/domain/**`)
 

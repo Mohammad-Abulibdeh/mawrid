@@ -1,4 +1,5 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { pointQualityMap } from '../domain/analytics';
 import { toCsv } from '../domain/csv';
 import { DEFAULT_PLAN_PARAMS, planDispatch, type PlanParams, type PlanResult } from '../domain/planner';
@@ -38,6 +39,15 @@ export default function Planner() {
   const quality = useMemo(() => pointQualityMap(ds, refDate), [ds, refDate]);
   const siteName = new Map(ds.sites.map((s) => [s.id, s.name]));
   const pointName = new Map(ds.points.map((p) => [p.id, p.name]));
+
+  // …/#/planner?run=1 runs the plan immediately with the saved parameters (shareable link).
+  const [searchParams] = useSearchParams();
+  const autoRun = searchParams.get('run') === '1';
+  useEffect(() => {
+    if (autoRun && metrics.length > 0) setResult(planDispatch(ds, refDate, loadParams()));
+    // run once on arrival only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRun]);
 
   const run = (e: React.FormEvent) => {
     e.preventDefault();

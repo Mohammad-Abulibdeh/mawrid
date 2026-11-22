@@ -218,7 +218,10 @@ export default function Planner() {
                           <strong>{num(s.afterPerCapita, 1)}</strong>
                         </td>
                         <td className="num">{num(s.loads)}</td>
-                        <td>{s.unreachable && <span className="badge badge-critical">▲ {t('plan.unreachable')}</span>}</td>
+                        <td>
+                          {s.unreachable && <span className="badge badge-critical">▲ {t('plan.unreachable')}</span>}
+                          {s.sourcesExhausted && <span className="badge badge-below">● {t('plan.exhausted')}</span>}
+                        </td>
                       </tr>
                     ))}
                 </tbody>

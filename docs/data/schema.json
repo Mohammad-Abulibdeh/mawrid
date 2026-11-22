@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Mohammad-Abulibdeh/mawrid/docs/data/schema.json",
+  "title": "Mawrid dataset",
+  "type": "object",
+  "required": ["schemaVersion", "sites", "points", "deliveries", "tests", "settings"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "demo": { "type": "boolean", "description": "true for the synthetic demo dataset" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "sites": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "governorate", "lat", "lng", "population"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "minLength": 1 },
+          "governorate": { "enum": ["North Gaza", "Gaza", "Deir al-Balah", "Khan Younis", "Rafah"] },
+          "lat": { "type": "number", "minimum": 31.21, "maximum": 31.6 },
+          "lng": { "type": "number", "minimum": 34.2, "maximum": 34.58 },
+          "population": { "type": "integer", "minimum": 1 },
+          "vulnerability": { "type": "number", "minimum": 1, "maximum": 2, "default": 1 },
+          "fixedSupplyLpd": { "type": "number", "minimum": 0, "default": 0 },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type", "status", "lat", "lng", "capacityLpd"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["desalination", "well", "network", "filling", "distribution"] },
+          "status": { "enum": ["functional", "partial", "down"] },
+          "lat": { "type": "number", "minimum": 31.21, "maximum": 31.6 },
+          "lng": { "type": "number", "minimum": 34.2, "maximum": 34.58 },
+          "capacityLpd": { "type": "number", "minimum": 0 },
+          "taps": { "type": "integer", "minimum": 0, "default": 0 },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "deliveries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "date", "pointId", "siteId", "litres"],
+        "properties": {
+          "id": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "pointId": { "type": "string" },
+          "siteId": { "type": "string" },
+          "litres": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "date", "pointId"],
+        "properties": {
+          "id": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "pointId": { "type": "string" },
+          "frc": { "type": "number", "minimum": 0, "description": "free residual chlorine, mg/L" },
+          "turbidity": { "type": "number", "minimum": 0, "description": "NTU" },
+          "ecoli": { "type": "number", "minimum": 0, "description": "CFU per 100 mL" }
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "targetLpd": { "type": "number", "default": 15 },
+        "criticalLpd": { "type": "number", "default": 6 },
+        "maxDistanceM": { "type": "number", "default": 500 },
+        "peoplePerTap": { "type": "number", "default": 250 },
+        "chlorineMode": { "enum": ["normal", "outbreak"], "default": "normal" },
+        "windowDays": { "type": "integer", "default": 7 },
+        "testMaxAgeDays": { "type": "integer", "default": 7 }
+      }
+    }
+  }
+}

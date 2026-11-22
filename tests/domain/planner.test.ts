@@ -51,6 +51,8 @@ describe('planDispatch', () => {
     const r = planDispatch(ds, REF, params());
     expect(r.loadsUsed).toBe(2);
     expect(r.stopReason).toBe('no_capacity');
+    expect(r.sites[0].sourcesExhausted).toBe(true);
+    expect(r.sites[0].unreachable).toBe(false);
   });
 
   it('never uses down, unsafe, distribution-only, or (optionally) untested sources', () => {

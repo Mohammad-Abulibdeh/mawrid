@@ -3,7 +3,11 @@ import { parseCsv, parseCsvObjects, toCsv } from '../../src/domain/csv';
 import { addDays, dateWindow, daysBetween, isIsoDate } from '../../src/domain/dates';
 import { isInGazaBounds } from '../../src/domain/geo';
 import { csvTemplate, exportCsv, importCsv } from '../../src/domain/io';
-import { buildDemoDataset } from '../../src/domain/seed';
+import { buildDemoDataset, emptyDataset } from '../../src/domain/seed';
+import deliveriesCsv from '../../docs/data/examples/deliveries.csv?raw';
+import pointsCsv from '../../docs/data/examples/points.csv?raw';
+import sitesCsv from '../../docs/data/examples/sites.csv?raw';
+import testsCsv from '../../docs/data/examples/tests.csv?raw';
 import { validateDataset, validateDelivery, validateSite, validateTest } from '../../src/domain/validate';
 import { REF, point, site } from './fixtures';
 
@@ -89,6 +93,21 @@ describe('CSV import/export', () => {
     expect(r.accepted).toBe(1);
     expect(r.deliveries![0].id).toMatch(/^dl-/);
     expect(r.rejected).toEqual([{ row: 3, errors: ['pointId: ref'] }]);
+  });
+
+  it('imports the documented example files in order without errors', () => {
+    let d = emptyDataset();
+    for (const [kind, text] of [
+      ['sites', sitesCsv],
+      ['points', pointsCsv],
+      ['deliveries', deliveriesCsv],
+      ['tests', testsCsv],
+    ] as const) {
+      const r = importCsv(d, kind, text);
+      expect(r.rejected).toEqual([]);
+      d = { ...d, [kind]: r[kind] };
+    }
+    expect(d.deliveries).toHaveLength(3);
   });
 
   it('provides a header-only template', () => {

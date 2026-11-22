@@ -1,0 +1,4 @@
+id,date,pointId,siteId,litres
+,2026-11-20,ex-pt-1,ex-site-1,30000
+,2026-11-20,ex-pt-1,ex-site-2,20000
+,2026-11-21,ex-pt-1,ex-site-2,40000

@@ -38,6 +38,8 @@ export interface PlanSiteResult {
   allocatedLitres: number;
   loads: number;
   unreachable: boolean;
+  /** Reachable sources ran out of water before this site reached the target. */
+  sourcesExhausted: boolean;
 }
 
 export interface PlanResult {
@@ -110,6 +112,7 @@ export function planDispatch(ds: Dataset, refDate: string, params: PlanParams): 
       loads: 0,
       active: true,
       unreachable: false,
+      exhausted: false,
     }));
   const per = (s: (typeof state)[number]) => (s.supply + s.allocated) / s.site.population;
   // Weighted shortfall: the site with the largest (target − projected) × vulnerability goes first.
@@ -153,6 +156,7 @@ export function planDispatch(ds: Dataset, refDate: string, params: PlanParams): 
     if (!src) {
       pick.active = false;
       if (candidates.get(pick.site.id)!.length === 0) pick.unreachable = true;
+      else pick.exhausted = true;
       continue;
     }
     remaining.set(src.point.id, remaining.get(src.point.id)! - load);
@@ -179,6 +183,7 @@ export function planDispatch(ds: Dataset, refDate: string, params: PlanParams): 
     allocatedLitres: s.allocated,
     loads: s.loads,
     unreachable: s.unreachable,
+    sourcesExhausted: s.exhausted,
   }));
   const tripList = [...trips.values()].sort((a, b) => b.litres - a.litres || a.siteId.localeCompare(b.siteId));
   const popWhere = (f: (r: PlanSiteResult) => boolean) =>

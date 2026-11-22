@@ -61,11 +61,12 @@ Mawrid uses a greedy discrete water-filling heuristic:
 
 ```
 repeat:
-    s ← site with the lowest projected L/person/day (ties → larger population)
-    if s already ≥ target: stop
+    s ← active site with the largest weighted shortfall (target − projected L/p/d) × vulnerability
+        (ties → larger population, then id)
+    if s already ≥ target: retire s, continue
     p ← nearest safe, functional source with remaining capacity ≥ one load
         and within max haul distance
-    if none: mark s unreachable, continue
+    if none: retire s (marked unreachable if no source is within the haul limit), continue
     assign one load p → s; update projections and capacities; decrement trips
 until trips or capacity exhausted
 ```
@@ -73,8 +74,13 @@ until trips or capacity exhausted
 Greedy max-min with unit increments is optimal for the continuous single-source case and
 is a well-known, explainable heuristic for the discrete multi-source case. Explainability was
 weighted over optimality: a coordinator has to be able to justify a plan to site committees.
-An optional vulnerability weight (e.g. sites hosting health facilities or many children)
-scales a site's effective population.
+An optional vulnerability weight (1.0–2.0; e.g. sites hosting health facilities or many
+children) multiplies a site's shortfall, so at equal coverage the more vulnerable site is
+served first, but a site that already meets the target never receives more.
+
+Development note: a first version ranked sites by `projected / vulnerability`. Unit tests
+showed it cannot break ties when every site is at 0 L, so it was replaced by the weighted
+shortfall above (see `tests/domain/planner.test.ts`).
 
 ## 4. Design implications from the context
 

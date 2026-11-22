@@ -31,7 +31,11 @@ Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)
   people < 6 L 191,000 → 129,300), service worker activated, no console errors.
 - Planner now reports `sourcesExhausted` per site (found during live check).
 - Added architecture (Mermaid), data schema + example CSVs (tested), user guide, deployment guide,
-  test report, screenshots (headless Edge, `docs/screenshots/`). Added shareable `?run=1` / `?lang=ar` links. Bumped GitHub Actions to Node 24-based versions.
+  test report, screenshots (headless Edge, `docs/screenshots/`). Bumped GitHub Actions to
+  Node 24-based versions.
+- Added shareable links `#/planner?run=1` and `?lang=ar|en`. 55 tests passing.
+- Process note: a scripted bulk edit corrupted four docs in commit 067abc6; restored from the
+  previous commit in the next commit.
 
 ### 2026-11-23 — M4: CI/CD
 - GitHub Actions: lint → typecheck → tests with coverage (JUnit + coverage artifact) → build →
@@ -42,7 +46,7 @@ Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)
 - Browser testing found: planner double-counted recent trucking (fixed: plan from non-trucked
   supply); RTL chart overflow (fixed). UI test found validation text inside labels (fixed).
 - Demo data rebalanced to 4.7 L/person/day average.
-- 54 tests passing (55 after M5).
+- 54 tests passing.
 
 ### 2026-11-23 — M1: domain engine
 - Analytics, quality rules, planner, CSV, validation, demo data. 42 unit tests.

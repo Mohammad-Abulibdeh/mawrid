@@ -16,7 +16,7 @@ export interface PlanParams {
 }
 
 export const DEFAULT_PLAN_PARAMS: PlanParams = {
-  trucks: 10,
+  trucks: 25,
   tripsPerTruck: 4,
   loadLitres: 10_000,
   maxHaulKm: 15,
@@ -102,7 +102,9 @@ export function planDispatch(ds: Dataset, refDate: string, params: PlanParams): 
     .filter((m) => m.site.population > 0)
     .map((m) => ({
       site: m.site,
-      supply: m.supplyLpd,
+      // The plan covers the whole day's trucking, so it starts from non-trucked supply only.
+      // "before" is today's actual coverage (recent trucking included) for comparison.
+      supply: m.site.fixedSupplyLpd || 0,
       before: m.perCapita,
       allocated: 0,
       loads: 0,

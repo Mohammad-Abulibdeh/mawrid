@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 
 // Served from https://<user>.github.io/mawrid/ on GitHub Pages.
 export default defineConfig({
-  base: process.env.BASE_PATH ?? '/mawrid/',
+  base: '/mawrid/',
   plugins: [react()],
   build: { sourcemap: true },
   test: {

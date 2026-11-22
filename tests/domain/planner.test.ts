@@ -111,9 +111,20 @@ describe('planDispatch', () => {
     expect(r.stopReason).toBe('target_reached');
   });
 
-  it('improves the minimum coverage on the demo dataset without exceeding capacity', () => {
+  it('starts from non-trucked supply only (plans the whole trucking round)', () => {
+    const ds = dataset({
+      sites: [site('a', { population: 1000 })],
+      points: [point('p')],
+      deliveries: Array.from({ length: 7 }, (_, i) => ({ id: `d${i}`, date: `2026-11-${14 + i}`, pointId: 'p', siteId: 'a', litres: 10_000 })),
+    });
+    const r = planDispatch(ds, REF, params({ tripsPerTruck: 3 }));
+    expect(r.sites[0].beforePerCapita).toBe(10); // today's actual coverage
+    expect(r.sites[0].afterPerCapita).toBe(3); // 3 planned loads from a zero non-trucked baseline
+  });
+
+  it('with a fleet the size of current trucking, raises the worst-off sites on the demo dataset', () => {
     const ds = buildDemoDataset(REF);
-    const r = planDispatch(ds, REF, { trucks: 12, tripsPerTruck: 4, loadLitres: 10_000, maxHaulKm: 20, includeUntested: true });
+    const r = planDispatch(ds, REF, { trucks: 25, tripsPerTruck: 4, loadLitres: 10_000, maxHaulKm: 20, includeUntested: true });
     expect(r.loadsUsed).toBeGreaterThan(0);
     expect(r.minAfter).toBeGreaterThan(r.minBefore);
     expect(r.popCriticalAfter).toBeLessThanOrEqual(r.popCriticalBefore);

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseCsv, parseCsvObjects, toCsv } from '../../src/domain/csv';
 import { addDays, dateWindow, daysBetween, isIsoDate } from '../../src/domain/dates';
 import { isInGazaBounds } from '../../src/domain/geo';
+import { csvTemplate, exportCsv, importCsv } from '../../src/domain/io';
 import { buildDemoDataset } from '../../src/domain/seed';
 import { validateDataset, validateDelivery, validateSite, validateTest } from '../../src/domain/validate';
 import { REF, point, site } from './fixtures';
@@ -68,6 +69,30 @@ describe('validation', () => {
   });
   it('rejects unknown schema versions', () => {
     expect(validateDataset({ schemaVersion: 9 }).errors).toEqual(['unsupported_schema']);
+  });
+});
+
+describe('CSV import/export', () => {
+  const ds = buildDemoDataset(REF);
+
+  it('round-trips every entity type through CSV', () => {
+    for (const kind of ['sites', 'points', 'deliveries', 'tests'] as const) {
+      const r = importCsv(ds, kind, exportCsv(ds, kind), REF);
+      expect(r.rejected).toEqual([]);
+      expect(r[kind]).toEqual(JSON.parse(JSON.stringify(ds[kind])));
+    }
+  });
+
+  it('matches headers case-insensitively, assigns ids, and reports bad rows with line numbers', () => {
+    const csv = 'DATE,POINTID,SITEID,LITRES\n2026-11-19,pt-01,site-01,20000\n2026-11-19,pt-99,site-01,5\n';
+    const r = importCsv(ds, 'deliveries', csv, REF);
+    expect(r.accepted).toBe(1);
+    expect(r.deliveries![0].id).toMatch(/^dl-/);
+    expect(r.rejected).toEqual([{ row: 3, errors: ['pointId: ref'] }]);
+  });
+
+  it('provides a header-only template', () => {
+    expect(csvTemplate('tests')).toBe('id,date,pointId,frc,turbidity,ecoli\r\n');
   });
 });
 

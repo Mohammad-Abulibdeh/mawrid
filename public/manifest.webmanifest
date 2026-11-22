@@ -1,0 +1,11 @@
+{
+  "name": "Mawrid — Gaza Water Gap Planner",
+  "short_name": "Mawrid",
+  "description": "Offline-first water gap analysis and fair water-trucking planner for displacement sites in Gaza.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f8",
+  "theme_color": "#0b5c8a",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

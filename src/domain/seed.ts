@@ -27,15 +27,15 @@ type SiteSeed = [string, Governorate, number, number, number, number, number];
 const SITES: SiteSeed[] = [
   ['Demo Site N-1 (Beit Lahia area)', 'North Gaza', 31.545, 0.03, 9200, 1.2, 8000],
   ['Demo Site N-2 (Jabalia area)', 'North Gaza', 31.53, 0.045, 14500, 1.0, 12000],
-  ['Demo Site G-1 (Gaza City west)', 'Gaza', 31.515, 0.02, 21000, 1.0, 40000],
+  ['Demo Site G-1 (Gaza City west)', 'Gaza', 31.515, 0.02, 21000, 1.0, 200000],
   ['Demo Site G-2 (Gaza City centre)', 'Gaza', 31.5, 0.035, 17800, 1.4, 25000],
   ['Demo Site G-3 (Gaza City south)', 'Gaza', 31.475, 0.03, 6400, 1.0, 0],
   ['Demo Site M-1 (Nuseirat area)', 'Deir al-Balah', 31.445, 0.025, 12300, 1.0, 15000],
   ['Demo Site M-2 (Bureij area)', 'Deir al-Balah', 31.435, 0.05, 5600, 1.3, 0],
-  ['Demo Site M-3 (Deir al-Balah west)', 'Deir al-Balah', 31.415, 0.018, 26000, 1.0, 30000],
+  ['Demo Site M-3 (Deir al-Balah west)', 'Deir al-Balah', 31.415, 0.018, 26000, 1.0, 100000],
   ['Demo Site M-4 (Deir al-Balah east)', 'Deir al-Balah', 31.405, 0.045, 7300, 1.0, 0],
   ['Demo Site K-1 (Khan Younis west)', 'Khan Younis', 31.355, 0.02, 31000, 1.2, 20000],
-  ['Demo Site K-2 (Khan Younis centre)', 'Khan Younis', 31.345, 0.04, 11000, 1.0, 5000],
+  ['Demo Site K-2 (Khan Younis centre)', 'Khan Younis', 31.345, 0.04, 6000, 1.0, 5000],
   ['Demo Site K-3 (Al-Mawasi north)', 'Khan Younis', 31.37, 0.012, 38500, 1.5, 10000],
   ['Demo Site K-4 (Al-Mawasi south)', 'Khan Younis', 31.33, 0.012, 24000, 1.0, 0],
   ['Demo Site K-5 (Bani Suhaila area)', 'Khan Younis', 31.338, 0.06, 4200, 1.0, 0],
@@ -101,7 +101,7 @@ export function buildDemoDataset(refDate: string): Dataset {
     for (const [pointId, siteIds] of routes) {
       for (const siteId of siteIds) {
         if (rnd() < 0.3) continue; // fuel shortages, access denials
-        const loads = 1 + Math.floor(rnd() * 4);
+        const loads = 3 + Math.floor(rnd() * 8);
         deliveries.push({ id: `dl-${++n}`, date, pointId, siteId, litres: loads * 10_000 });
       }
     }

@@ -124,6 +124,7 @@ describe('dispatch planner', () => {
   it('runs immediately from a shared ?run=1 link', () => {
     renderApp('/planner?run=1', buildDemoDataset(todayIso()));
     expect(screen.getByRole('heading', { name: 'Trip list' })).toBeInTheDocument();
+    expect(mainNav().getByRole('link', { name: /Truck plan.*step 4, done/ })).toBeInTheDocument();
   });
 
   it('rejects non-numeric parameters', async () => {

@@ -45,6 +45,9 @@ export function usePlanMade(): boolean {
   useEffect(() => {
     const on = () => setMade(hasMadePlan());
     window.addEventListener(PLAN_EVENT, on);
+    // Child effects run before parent effects: a page may have built a plan (e.g. a shared
+    // ?run=1 link) before this listener existed, so re-read once after subscribing.
+    on();
     return () => window.removeEventListener(PLAN_EVENT, on);
   }, []);
   return made;

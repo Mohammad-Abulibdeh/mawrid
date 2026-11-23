@@ -19,7 +19,7 @@ import type { PointStatus } from '../domain/types';
 import type { FieldError } from '../domain/validate';
 import { useI18n } from '../i18n/i18n';
 import type { StringKey } from '../i18n/strings';
-import { hasMadePlan, journeySteps, nextStep, type StepId } from '../state/journey';
+import { journeySteps, nextStep, usePlanMade, type StepId } from '../state/journey';
 import { useStore } from '../state/store';
 
 /* ---------- status badges: colour is always paired with an icon and a label ---------- */
@@ -102,7 +102,7 @@ export function Hint({ children }: { children: ReactNode }) {
 export function JourneyBar({ current }: { current: StepId }) {
   const { t, num } = useI18n();
   const { ds } = useStore();
-  const steps = journeySteps(ds, hasMadePlan());
+  const steps = journeySteps(ds, usePlanMade());
   const done = steps.filter((s) => s.done).length;
   const here = steps.find((s) => s.id === current)!;
   const next = nextStep(steps.filter((s) => s.id !== current)) ?? (current !== 'plan' ? steps[here.n] : undefined);

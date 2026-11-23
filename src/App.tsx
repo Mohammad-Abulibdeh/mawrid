@@ -33,7 +33,7 @@ import Planner from './pages/Planner';
 import Points from './pages/Points';
 import Quality from './pages/Quality';
 import Sites from './pages/Sites';
-import { hasMadePlan, journeySteps, type StepId } from './state/journey';
+import { journeySteps, usePlanMade, type StepId } from './state/journey';
 import { useStore } from './state/store';
 
 // Leaflet is the largest dependency; only load it when a map is shown.
@@ -95,7 +95,7 @@ function Shell() {
   const online = useOnline();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const steps = journeySteps(ds, hasMadePlan());
+  const steps = journeySteps(ds, usePlanMade());
   const stepOf = (id: StepId) => steps.find((s) => s.id === id)!;
   const isHome = location.pathname === '/';
 

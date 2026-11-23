@@ -42,7 +42,7 @@ const en = {
   'pstatus.partial': 'Partially functional',
   'pstatus.down': 'Not functional',
 
-  'dash.intro': 'Water available per person per day at each displacement site, against the Sphere emergency minimum. Use the dispatch planner to allocate tomorrow’s trucks to the largest gaps.',
+  'dash.intro': 'Water available per person per day at each displacement site, against the Sphere emergency minimum. Use the truck plan to send tomorrow’s trucks to the largest gaps.',
   'dash.population': 'People in sites',
   'dash.avg': 'Average supply',
   'dash.avgSub': 'L/person/day (target {t})',
@@ -375,7 +375,7 @@ const ar: Partial<Record<StringKey, string>> = {
   'pstatus.partial': 'تعمل جزئيًا',
   'pstatus.down': 'متوقفة',
 
-  'dash.intro': 'كمية المياه المتاحة لكل شخص يوميًا في كل موقع نزوح مقارنة بالحد الأدنى لمعايير اسفير في الطوارئ. استخدم مخطط التوزيع لتوجيه شاحنات الغد إلى أكبر الفجوات.',
+  'dash.intro': 'كمية المياه المتاحة لكل شخص يوميًا في كل موقع نزوح مقارنة بالحد الأدنى لمعايير اسفير في الطوارئ. استخدم خطة الشاحنات لتوجيه شاحنات الغد إلى أكبر الفجوات.',
   'dash.population': 'عدد الأشخاص في المواقع',
   'dash.avg': 'متوسط الإمداد',
   'dash.avgSub': 'لتر/شخص/يوم (الهدف {t})',

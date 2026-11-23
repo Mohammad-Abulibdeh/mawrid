@@ -18,7 +18,7 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../components/ui';
 import { useI18n } from '../i18n/i18n';
-import { hasMadePlan, journeySteps, nextStep, type StepId } from '../state/journey';
+import { journeySteps, nextStep, usePlanMade, type StepId } from '../state/journey';
 import { useStore } from '../state/store';
 
 const STEP_ICON: Record<StepId, LucideIcon> = { sites: Tent, points: Droplets, record: FlaskConical, plan: Truck };
@@ -73,7 +73,7 @@ export default function Home() {
   const { ds, resetDemo, clearAll } = useStore();
   const toast = useToast();
   const navigate = useNavigate();
-  const steps = journeySteps(ds, hasMadePlan());
+  const steps = journeySteps(ds, usePlanMade());
   const next = nextStep(steps);
   const done = steps.filter((s) => s.done).length;
   const hasData = ds.sites.length + ds.points.length + ds.deliveries.length + ds.tests.length > 0;

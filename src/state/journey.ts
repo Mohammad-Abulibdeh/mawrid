@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { FILL_SOURCE_TYPES, type Dataset } from '../domain/types';
 import type { StringKey } from '../i18n/strings';
 
@@ -27,12 +28,26 @@ export function hasMadePlan(): boolean {
   }
 }
 
+const PLAN_EVENT = 'mawrid:plan-made';
+
 export function markPlanMade() {
   try {
     localStorage.setItem(PLAN_KEY, '1');
   } catch {
     /* storage unavailable: the step simply stays "to do" */
   }
+  window.dispatchEvent(new Event(PLAN_EVENT));
+}
+
+/** Reactive version of hasMadePlan(): every progress indicator updates as soon as a plan is built. */
+export function usePlanMade(): boolean {
+  const [made, setMade] = useState(hasMadePlan);
+  useEffect(() => {
+    const on = () => setMade(hasMadePlan());
+    window.addEventListener(PLAN_EVENT, on);
+    return () => window.removeEventListener(PLAN_EVENT, on);
+  }, []);
+  return made;
 }
 
 export function journeySteps(ds: Dataset, planMade: boolean): JourneyStep[] {

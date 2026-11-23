@@ -174,6 +174,8 @@ describe('welcome page and guided steps', () => {
     await user.click(screen.getByRole('link', { name: /Start now/ }));
     await user.click(screen.getByRole('button', { name: /Build the plan/ }));
     expect(screen.getByText('4 of 4 steps ready')).toBeInTheDocument();
+    // The side menu marks step 4 as done straight away, without a page change.
+    expect(mainNav().getByRole('link', { name: /Truck plan.*step 4, done/ })).toBeInTheDocument();
     await user.click(mainNav().getByRole('link', { name: /Home/ }));
     expect(screen.getByText('Everything is set up. Open the overview to see today’s picture.')).toBeInTheDocument();
   });

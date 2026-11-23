@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { MARKER_SVG } from '../components/icons';
 import { pointQualityMap } from '../domain/analytics';
 import WaterMap from '../components/WaterMap';
 import { BAND_COLOR } from '../components/charts';
@@ -16,7 +17,7 @@ export default function MapPage() {
 
   return (
     <>
-      <PageHeader title={t('nav.map')} intro={t('map.tiles')} />
+      <PageHeader title={t('nav.map')} intro={t('map.tiles')} hint={t('map.hint')} />
       <Card>
         <div className="toolbar">
           <label className="check">
@@ -46,27 +47,19 @@ export default function MapPage() {
           ))}
           <span className="legend-item muted">{t('map.legendSize')}</span>
           <span className="legend-item">
-            <span className="pt-icon pt-ok pt-source legend-pt">
-              <span>✓</span>
-            </span>
+            <span className="pt-icon pt-ok pt-source legend-pt" dangerouslySetInnerHTML={{ __html: MARKER_SVG.ok }} />
             {t('pstatus.functional')}
           </span>
           <span className="legend-item">
-            <span className="pt-icon pt-warn pt-source legend-pt">
-              <span>◐</span>
-            </span>
+            <span className="pt-icon pt-warn pt-source legend-pt" dangerouslySetInnerHTML={{ __html: MARKER_SVG.warn }} />
             {t('pstatus.partial')} / {t('q.untested')}
           </span>
           <span className="legend-item">
-            <span className="pt-icon pt-unsafe pt-source legend-pt">
-              <span>!</span>
-            </span>
+            <span className="pt-icon pt-unsafe pt-source legend-pt" dangerouslySetInnerHTML={{ __html: MARKER_SVG.unsafe }} />
             {t('q.unsafe')}
           </span>
           <span className="legend-item">
-            <span className="pt-icon pt-down pt-source legend-pt">
-              <span>✕</span>
-            </span>
+            <span className="pt-icon pt-down pt-source legend-pt" dangerouslySetInnerHTML={{ __html: MARKER_SVG.down }} />
             {t('pstatus.down')}
           </span>
         </div>

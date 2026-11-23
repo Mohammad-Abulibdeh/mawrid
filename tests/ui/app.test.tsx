@@ -23,21 +23,25 @@ function renderApp(path: string, dataset: Dataset, lang: 'en' | 'ar' = 'en') {
 }
 
 beforeEach(() => {
+  localStorage.clear();
   vi.spyOn(window, 'confirm').mockReturnValue(true);
 });
 
+const mainNav = () => within(screen.getByRole('navigation', { name: 'Main' }));
+
 describe('dashboard', () => {
   it('shows KPIs, the demo-data warning and alerts for unsafe sources', () => {
-    renderApp('/', buildDemoDataset(todayIso()));
-    expect(screen.getByRole('heading', { name: 'Dashboard' })).toBeInTheDocument();
+    renderApp('/dashboard', buildDemoDataset(todayIso()));
+    expect(screen.getByRole('heading', { name: 'Overview' })).toBeInTheDocument();
     expect(screen.getByText(/synthetic demonstration data/)).toBeInTheDocument();
     expect(screen.getByText('People in sites')).toBeInTheDocument();
     expect(screen.getByText(/Demo Private Desal Unit 1: unsafe water — E. coli detected/)).toBeInTheDocument();
   });
 
   it('guides the user when there is no data', () => {
-    renderApp('/', emptyDataset());
+    renderApp('/dashboard', emptyDataset());
     expect(screen.getByText(/No sites yet/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Add site' })).toHaveAttribute('href', '#/sites');
   });
 });
 
@@ -68,7 +72,7 @@ describe('site → point → delivery workflow', () => {
     expect(within(siteRow).getByText(/Critical/)).toBeInTheDocument();
 
     // Add a water point.
-    await user.click(screen.getByRole('link', { name: /Water points/ }));
+    await user.click(mainNav().getByRole('link', { name: /Water points/ }));
     await user.click(screen.getByRole('button', { name: /Add water point/ }));
     await user.type(screen.getByLabelText('Name'), 'Test Plant');
     await user.selectOptions(screen.getByLabelText('Type'), 'desalination');
@@ -80,7 +84,7 @@ describe('site → point → delivery workflow', () => {
     expect(screen.getByRole('row', { name: /Test Plant/ })).toBeInTheDocument();
 
     // Record 7 days × 15,000 L → 15 L/person/day average over the 7-day window = meets target.
-    await user.click(screen.getByRole('link', { name: /Deliveries/ }));
+    await user.click(mainNav().getByRole('link', { name: /Deliveries/ }));
     await user.selectOptions(screen.getByLabelText('Water point'), 'Test Plant');
     await user.selectOptions(screen.getByLabelText('Site'), 'Test Site');
     await user.clear(screen.getByLabelText('Litres delivered'));
@@ -88,7 +92,7 @@ describe('site → point → delivery workflow', () => {
     await user.click(screen.getByRole('button', { name: 'Add' }));
     expect(screen.getByText('Delivery saved.')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('link', { name: /Sites/ }));
+    await user.click(mainNav().getByRole('link', { name: /Sites/ }));
     expect(within(screen.getByRole('row', { name: /Test Site/ })).getByText('Meets target')).toBeInTheDocument();
   });
 });
@@ -109,7 +113,7 @@ describe('dispatch planner', () => {
   it('produces a trip list and never routes from the unsafe demo source', async () => {
     const user = userEvent.setup();
     renderApp('/planner', buildDemoDataset(todayIso()));
-    await user.click(screen.getByRole('button', { name: /Run plan/ }));
+    await user.click(screen.getByRole('button', { name: /Build the plan/ }));
     expect(screen.getByRole('heading', { name: 'Trip list' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Sources not used' })).toBeInTheDocument();
     const tripTable = screen.getByRole('heading', { name: 'Trip list' }).closest('section')!;
@@ -128,15 +132,74 @@ describe('dispatch planner', () => {
     const trucks = screen.getByLabelText('Trucks available');
     await user.clear(trucks);
     await user.type(trucks, 'abc');
-    await user.click(screen.getByRole('button', { name: /Run plan/ }));
+    await user.click(screen.getByRole('button', { name: /Build the plan/ }));
     expect(screen.getByRole('alert')).toHaveTextContent('Must be a number');
   });
 });
 
 describe('Arabic interface', () => {
   it('renders right-to-left with Arabic labels', () => {
-    renderApp('/', buildDemoDataset(todayIso()), 'ar');
+    renderApp('/dashboard', buildDemoDataset(todayIso()), 'ar');
     expect(document.documentElement.dir).toBe('rtl');
-    expect(screen.getByRole('heading', { name: 'لوحة المتابعة' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'نظرة عامة' })).toBeInTheDocument();
+  });
+
+  it('shows the Arabic welcome page with the start button', () => {
+    renderApp('/', buildDemoDataset(todayIso()), 'ar');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('كل شاحنة مياه تذهب إلى من يحتاجها أكثر.');
+    expect(screen.getByRole('link', { name: /ابدأ الآن/ })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: 'اللغة' })).toBeInTheDocument();
+  });
+});
+
+describe('welcome page and guided steps', () => {
+  it('explains the project and sends a new user to step 1', async () => {
+    const user = userEvent.setup();
+    renderApp('/', emptyDataset());
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Every water truck/);
+    expect(screen.getByRole('heading', { name: 'Too little water, and hard choices every day' })).toBeInTheDocument();
+    expect(screen.getByText('0 of 4 steps ready')).toBeInTheDocument();
+    expect(screen.queryByText(/synthetic demonstration data/)).not.toBeInTheDocument();
+    await user.click(screen.getByRole('link', { name: /Start now/ }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Add your sites' })).toBeInTheDocument();
+    expect(screen.getByText('Step 1 of 4')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Add your sites', current: 'step' })).toBeInTheDocument();
+  });
+
+  it('with sample data, points the user to the next unfinished step and tracks the plan', async () => {
+    const user = userEvent.setup();
+    renderApp('/', buildDemoDataset(todayIso()));
+    expect(screen.getByText('3 of 4 steps ready')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Start now/ })).toHaveAttribute('href', '#/planner');
+    await user.click(screen.getByRole('link', { name: /Start now/ }));
+    await user.click(screen.getByRole('button', { name: /Build the plan/ }));
+    expect(screen.getByText('4 of 4 steps ready')).toBeInTheDocument();
+    await user.click(mainNav().getByRole('link', { name: /Home/ }));
+    expect(screen.getByText('Everything is set up. Open the overview to see today’s picture.')).toBeInTheDocument();
+  });
+
+  it('switches from sample data to an empty workspace from the welcome page', async () => {
+    const user = userEvent.setup();
+    renderApp('/', buildDemoDataset(todayIso()));
+    await user.click(screen.getByRole('button', { name: 'Start with an empty workspace' }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Add your sites' })).toBeInTheDocument();
+    expect(screen.getByText('No records yet.')).toBeInTheDocument();
+  });
+
+  it('switches language from the top bar', async () => {
+    const user = userEvent.setup();
+    window.location.hash = '#/';
+    render(
+      <I18nProvider>
+        <StoreProvider initial={emptyDataset()}>
+          <App />
+        </StoreProvider>
+      </I18nProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'العربية' }));
+    expect(document.documentElement.dir).toBe('rtl');
+    expect(screen.getByRole('link', { name: /ابدأ الآن/ })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'English' }));
+    expect(document.documentElement.dir).toBe('ltr');
   });
 });

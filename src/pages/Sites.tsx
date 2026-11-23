@@ -1,6 +1,7 @@
+import { Pencil, Plus, Tent, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { CoordFields } from '../components/CoordFields';
-import { BandBadge, Card, Empty, Field, PageHeader, useToast } from '../components/ui';
+import { BandBadge, Card, Empty, Field, JourneyBar, PageHeader, useToast } from '../components/ui';
 import { GOVERNORATES, type Site } from '../domain/types';
 import { newId, validateSite, type FieldError } from '../domain/validate';
 import { useI18n } from '../i18n/i18n';
@@ -55,16 +56,19 @@ export default function Sites() {
   return (
     <>
       <PageHeader
-        title={t('nav.sites')}
+        eyebrow={t('journey.stepOf', { n: num(1), b: num(4) })}
+        title={t('step.sites.title')}
         intro={t('sites.intro')}
+        hint={t('sites.hint')}
         actions={
           editing === null && (
             <button className="btn btn-primary" onClick={() => open()}>
-              + {t('sites.add')}
+              <Plus className="icon" aria-hidden="true" /> {t('sites.add')}
             </button>
           )
         }
       />
+      <JourneyBar current="sites" />
       {editing !== null && (
         <Card title={editing === 'new' ? t('sites.add') : t('sites.edit')}>
           <form className="form" onSubmit={submit} noValidate>
@@ -111,7 +115,7 @@ export default function Sites() {
       )}
       <Card>
         {ds.sites.length === 0 ? (
-          <Empty>{t('common.noRecords')}</Empty>
+          <Empty icon={Tent}>{t('common.noRecords')}</Empty>
         ) : (
           <div className="table-scroll">
             <table>
@@ -141,10 +145,10 @@ export default function Sites() {
                       <td>{m && <BandBadge band={m.band} />}</td>
                       <td className="actions">
                         <button className="btn btn-sm" onClick={() => open(s)}>
-                          {t('btn.edit')}
+                          <Pencil className="icon" aria-hidden="true" /> {t('btn.edit')}
                         </button>
                         <button className="btn btn-sm btn-danger" onClick={() => remove(s)}>
-                          {t('btn.delete')}
+                          <Trash className="icon" aria-hidden="true" /> {t('btn.delete')}
                         </button>
                       </td>
                     </tr>

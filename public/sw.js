@@ -4,7 +4,7 @@
  * - Map tiles (OpenStreetMap): cache what has been viewed, capped, so recently
  *   seen areas still render offline.
  */
-const VERSION = 'mawrid-v1';
+const VERSION = 'mawrid-v2';
 const SHELL = `${VERSION}-shell`;
 const TILES = `${VERSION}-tiles`;
 const MAX_TILES = 600;

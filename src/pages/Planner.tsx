@@ -1,10 +1,12 @@
+import { CalendarDays, CircleCheck, Download, Info, Play, Route, Truck } from 'lucide-react';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { pointQualityMap } from '../domain/analytics';
 import { toCsv } from '../domain/csv';
 import { DEFAULT_PLAN_PARAMS, planDispatch, type PlanParams, type PlanResult } from '../domain/planner';
-import { Card, Empty, Kpi, PageHeader, downloadFile } from '../components/ui';
+import { Card, Empty, Field, JourneyBar, Kpi, PageHeader, PlanFlag, downloadFile } from '../components/ui';
 import { useI18n } from '../i18n/i18n';
+import { markPlanMade } from '../state/journey';
 import { useStore } from '../state/store';
 
 const WaterMap = lazy(() => import('../components/WaterMap'));
@@ -44,7 +46,10 @@ export default function Planner() {
   const [searchParams] = useSearchParams();
   const autoRun = searchParams.get('run') === '1';
   useEffect(() => {
-    if (autoRun && metrics.length > 0) setResult(planDispatch(ds, refDate, loadParams()));
+    if (autoRun && metrics.length > 0) {
+      setResult(planDispatch(ds, refDate, loadParams()));
+      markPlanMade();
+    }
     // run once on arrival only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoRun]);
@@ -74,6 +79,7 @@ export default function Planner() {
       /* ignore */
     }
     setResult(planDispatch(ds, refDate, params));
+    markPlanMade();
   };
 
   const exportCsv = () => {
@@ -96,30 +102,31 @@ export default function Planner() {
 
   return (
     <>
-      <PageHeader title={t('nav.planner')} intro={t('plan.intro')} />
-      <Card>
+      <PageHeader
+        eyebrow={t('journey.stepOf', { n: num(4), b: num(4) })}
+        title={t('step.plan.title')}
+        intro={t('plan.intro')}
+        hint={t('plan.hint')}
+      />
+      <JourneyBar current="plan" />
+      <Card title={t('plan.formTitle')}>
         <form className="form" onSubmit={run}>
           <div className="row-5">
-            <label className="field">
-              <span className="field-label">{t('plan.trucks')}</span>
-              <input inputMode="numeric" value={form.trucks} onChange={set('trucks')} />
-            </label>
-            <label className="field">
-              <span className="field-label">{t('plan.trips')}</span>
-              <input inputMode="numeric" value={form.tripsPerTruck} onChange={set('tripsPerTruck')} />
-            </label>
-            <label className="field">
-              <span className="field-label">{t('plan.load')}</span>
-              <input inputMode="numeric" value={form.loadLitres} onChange={set('loadLitres')} />
-            </label>
-            <label className="field">
-              <span className="field-label">{t('plan.haul')}</span>
-              <input inputMode="decimal" value={form.maxHaulKm} onChange={set('maxHaulKm')} />
-            </label>
-            <label className="field">
-              <span className="field-label">{t('plan.target')}</span>
-              <input inputMode="decimal" value={form.targetLpd} onChange={set('targetLpd')} />
-            </label>
+            <Field name="trucks" label={t('plan.trucks')} help={t('plan.trucksHelp')}>
+              <input id="f-trucks" inputMode="numeric" value={form.trucks} onChange={set('trucks')} aria-describedby="h-trucks" />
+            </Field>
+            <Field name="tripsPerTruck" label={t('plan.trips')} help={t('plan.tripsHelp')}>
+              <input id="f-tripsPerTruck" inputMode="numeric" value={form.tripsPerTruck} onChange={set('tripsPerTruck')} aria-describedby="h-tripsPerTruck" />
+            </Field>
+            <Field name="loadLitres" label={t('plan.load')} help={t('plan.loadHelp')}>
+              <input id="f-loadLitres" inputMode="numeric" value={form.loadLitres} onChange={set('loadLitres')} aria-describedby="h-loadLitres" />
+            </Field>
+            <Field name="maxHaulKm" label={t('plan.haul')} help={t('plan.haulHelp')}>
+              <input id="f-maxHaulKm" inputMode="decimal" value={form.maxHaulKm} onChange={set('maxHaulKm')} aria-describedby="h-maxHaulKm" />
+            </Field>
+            <Field name="targetLpd" label={t('plan.target')} help={t('plan.targetHelp')}>
+              <input id="f-targetLpd" inputMode="decimal" value={form.targetLpd} onChange={set('targetLpd')} aria-describedby="h-targetLpd" />
+            </Field>
           </div>
           <label className="check">
             <input type="checkbox" checked={form.includeUntested} onChange={(e) => setForm((f) => ({ ...f, includeUntested: e.target.checked }))} />{' '}
@@ -132,11 +139,11 @@ export default function Planner() {
           )}
           <div className="form-actions">
             <button className="btn btn-primary" type="submit" disabled={metrics.length === 0}>
-              ▶ {t('btn.run')}
+              <Play className="icon flip-rtl" aria-hidden="true" /> {t('btn.run')}
             </button>
             {result && result.trips.length > 0 && (
               <button className="btn" type="button" onClick={exportCsv}>
-                ⬇ {t('btn.exportCsv')}
+                <Download className="icon" aria-hidden="true" /> {t('btn.exportCsv')}
               </button>
             )}
           </div>
@@ -144,11 +151,12 @@ export default function Planner() {
       </Card>
 
       {!result ? (
-        <Empty>{t('plan.none')}</Empty>
+        <Empty icon={CalendarDays}>{t('plan.none')}</Empty>
       ) : (
         <>
           <Card title={t('plan.summary')}>
             <p className="stop-reason" role="status">
+              {result.stopReason === 'target_reached' ? <CircleCheck size={20} aria-hidden="true" /> : <Info size={20} aria-hidden="true" />}
               {result.eligibleSources.length === 0 ? t('plan.noSources') : t(`plan.stop.${result.stopReason}`)}
             </p>
             <div className="kpi-row">
@@ -168,7 +176,7 @@ export default function Planner() {
           <div className="grid-2">
             <Card title={t('plan.trips.title')}>
               {result.trips.length === 0 ? (
-                <Empty>{t('common.noRecords')}</Empty>
+                <Empty icon={Truck}>{t('common.noRecords')}</Empty>
               ) : (
                 <div className="table-scroll">
                   <table>
@@ -196,7 +204,7 @@ export default function Planner() {
                 </div>
               )}
             </Card>
-            <Card title={t('plan.map')}>
+            <Card title={t('plan.map')} aside={<Route size={18} aria-hidden="true" />}>
               <Suspense fallback={<div className="map-loading">{t('common.loading')}</div>}>
                 <WaterMap metrics={metrics} points={result.eligibleSources} quality={quality} trips={result.trips} height={420} />
               </Suspense>
@@ -229,8 +237,8 @@ export default function Planner() {
                         </td>
                         <td className="num">{num(s.loads)}</td>
                         <td>
-                          {s.unreachable && <span className="badge badge-critical">▲ {t('plan.unreachable')}</span>}
-                          {s.sourcesExhausted && <span className="badge badge-below">● {t('plan.exhausted')}</span>}
+                          {s.unreachable && <PlanFlag tone="critical" label={t('plan.unreachable')} />}
+                          {s.sourcesExhausted && <PlanFlag tone="below" label={t('plan.exhausted')} />}
                         </td>
                       </tr>
                     ))}

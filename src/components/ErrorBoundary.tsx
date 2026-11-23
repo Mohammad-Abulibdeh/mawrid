@@ -1,3 +1,4 @@
+import { RotateCcw } from 'lucide-react';
 import { Component, type ReactNode } from 'react';
 
 interface State {
@@ -26,7 +27,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode; resetKey?: s
           <div className="small">Your data is still saved on this device. / بياناتك ما زالت محفوظة على هذا الجهاز.</div>
         </div>
         <button className="btn btn-sm" onClick={() => this.setState({ error: null })}>
-          ↻
+          <RotateCcw className="icon" aria-hidden="true" /> Try again / حاول مجددًا
         </button>
       </div>
     );

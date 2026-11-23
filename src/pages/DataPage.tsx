@@ -1,3 +1,4 @@
+import { Download, FileSpreadsheet, HardDrive, RotateCcw, SlidersHorizontal, Trash, Upload } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Card, PageHeader, downloadFile, readFileText, useToast } from '../components/ui';
 import { csvTemplate, exportCsv, importCsv, type EntityKind } from '../domain/io';
@@ -72,7 +73,7 @@ export default function DataPage() {
 
   return (
     <>
-      <PageHeader title={t('nav.data')} intro={t('data.intro')} />
+      <PageHeader title={t('nav.data')} intro={t('data.intro')} hint={t('data.hint')} />
       <p className="muted">
         {t('data.counts', { s: num(ds.sites.length), p: num(ds.points.length), d: num(ds.deliveries.length), q: num(ds.tests.length) })}
       </p>
@@ -96,19 +97,19 @@ export default function DataPage() {
       )}
 
       <div className="grid-2">
-        <Card title="JSON">
+        <Card title={t('data.jsonTitle')} aside={<HardDrive size={20} aria-hidden="true" />}>
           <div className="button-col">
             <button className="btn btn-primary" onClick={exportJson}>
-              ⬇ {t('data.exportJson')}
+              <Download className="icon" aria-hidden="true" /> {t('data.exportJson')}
             </button>
             <label className="btn file-btn">
-              ⬆ {t('data.importJson')}
+              <Upload className="icon" aria-hidden="true" /> {t('data.importJson')}
               <input ref={jsonInput} type="file" accept="application/json,.json" onChange={(e) => onJson(e.target.files?.[0])} />
             </label>
           </div>
         </Card>
 
-        <Card title={t('data.settings')}>
+        <Card title={t('data.settings')} aside={<SlidersHorizontal size={20} aria-hidden="true" />}>
           <form className="form" onSubmit={saveSettings}>
             <div className="row-2">
               {NUM_SETTINGS.map((k) => (
@@ -134,7 +135,7 @@ export default function DataPage() {
         </Card>
       </div>
 
-      <Card title={t('data.csvTitle')}>
+      <Card title={t('data.csvTitle')} aside={<FileSpreadsheet size={20} aria-hidden="true" />}>
         <p className="muted small">{t('data.csvHelp')}</p>
         <div className="table-scroll">
           <table>
@@ -144,13 +145,13 @@ export default function DataPage() {
                   <th scope="row">{t(label)}</th>
                   <td className="actions">
                     <button className="btn btn-sm" onClick={() => downloadFile(`mawrid-${kind}-${refDate}.csv`, exportCsv(ds, kind), 'text/csv;charset=utf-8')}>
-                      ⬇ {t('btn.exportCsv')}
+                      <Download className="icon" aria-hidden="true" /> {t('btn.exportCsv')}
                     </button>
                     <button className="btn btn-sm btn-ghost" onClick={() => downloadFile(`mawrid-${kind}-template.csv`, csvTemplate(kind), 'text/csv;charset=utf-8')}>
                       {t('btn.template')}
                     </button>
                     <label className="btn btn-sm file-btn">
-                      ⬆ {t('btn.import')}
+                      <Upload className="icon" aria-hidden="true" /> {t('btn.import')}
                       <input type="file" accept=".csv,text/csv" aria-label={`${t('btn.import')} ${t(label)}`} onChange={(e) => onCsv(kind, e.target)} />
                     </label>
                   </td>
@@ -164,10 +165,10 @@ export default function DataPage() {
       <Card title={t('data.danger')} className="danger-zone">
         <div className="form-actions">
           <button className="btn" onClick={() => window.confirm(t('confirm.reset')) && resetDemo()}>
-            {t('data.loadDemo')}
+            <RotateCcw className="icon" aria-hidden="true" /> {t('data.loadDemo')}
           </button>
           <button className="btn btn-danger" onClick={() => window.confirm(t('confirm.clear')) && clearAll()}>
-            {t('data.clear')}
+            <Trash className="icon" aria-hidden="true" /> {t('data.clear')}
           </button>
         </div>
       </Card>

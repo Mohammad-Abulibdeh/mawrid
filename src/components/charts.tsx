@@ -4,12 +4,12 @@ import { useI18n } from '../i18n/i18n';
 
 /** Status colours (reserved; always paired with icon + label in the legend). */
 export const BAND_COLOR: Record<CoverageBand, string> = {
-  critical: '#d03b3b',
-  below: '#fab219',
-  meets: '#0ca30c',
+  critical: '#c2453b',
+  below: '#e8ae2e',
+  meets: '#3c8a5a',
 };
 /** Single-series colour for volumes and plan routes. */
-export const SERIES_COLOR = '#2a6fdb';
+export const SERIES_COLOR = '#1f6b66';
 
 interface Tip {
   x: number;
@@ -103,7 +103,7 @@ export function CoverageChart({ metrics, target, critical }: { metrics: SiteMetr
               >
                 {r.site.name.length > 30 ? r.site.name.slice(0, 29) + '…' : r.site.name}
               </text>
-              <rect x={bx} y={y} width={w} height={rowH - 10} rx={3} fill={BAND_COLOR[r.band]} />
+              <rect x={bx} y={y} width={w} height={rowH - 10} rx={4} fill={BAND_COLOR[r.band]} stroke="#2a2420" strokeWidth={1} />
               <text
                 x={rtl ? bx - 4 : bx + w + 4}
                 y={y + 12}

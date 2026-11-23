@@ -1,3 +1,4 @@
+import { MapPin } from 'lucide-react';
 import { lazy, Suspense, useState } from 'react';
 import type { FieldError } from '../domain/validate';
 import { useI18n } from '../i18n/i18n';
@@ -30,7 +31,7 @@ export function CoordFields({
         </Field>
       </div>
       <button type="button" className="btn btn-ghost btn-sm" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
-        📍 {t('f.pickOnMap')}
+        <MapPin className="icon" aria-hidden="true" /> {t('f.pickOnMap')}
       </button>
       {open && (
         <div className="picker">

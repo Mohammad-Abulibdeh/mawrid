@@ -1,5 +1,7 @@
+import { FlaskConical, Plus, Trash, Truck } from 'lucide-react';
 import { useState } from 'react';
-import { Card, Empty, Field, PageHeader, useToast } from '../components/ui';
+import { Link } from 'react-router-dom';
+import { Card, Empty, Field, JourneyBar, PageHeader, useToast } from '../components/ui';
 import { newId, validateDelivery, type FieldError } from '../domain/validate';
 import { useI18n } from '../i18n/i18n';
 import { useStore } from '../state/store';
@@ -33,7 +35,18 @@ export default function Deliveries() {
 
   return (
     <>
-      <PageHeader title={t('nav.deliveries')} intro={t('del.intro', { d: num(ds.settings.windowDays) })} />
+      <PageHeader
+        eyebrow={t('journey.stepOf', { n: num(3), b: num(4) })}
+        title={t('nav.deliveries')}
+        intro={t('del.intro', { d: num(ds.settings.windowDays) })}
+        hint={t('del.hint')}
+        actions={
+          <Link className="btn" to="/quality">
+            <FlaskConical className="icon" aria-hidden="true" /> {t('q.add')}
+          </Link>
+        }
+      />
+      <JourneyBar current="record" />
       <Card title={t('del.add')}>
         <form className="form" onSubmit={submit} noValidate>
           <div className="row-4">
@@ -68,7 +81,7 @@ export default function Deliveries() {
           </div>
           <div className="form-actions">
             <button className="btn btn-primary" type="submit">
-              {t('btn.add')}
+              <Plus className="icon" aria-hidden="true" /> {t('btn.add')}
             </button>
           </div>
         </form>
@@ -90,7 +103,7 @@ export default function Deliveries() {
         title={`${t('nav.deliveries')} (${num(rows.length)})`}
       >
         {rows.length === 0 ? (
-          <Empty>{t('common.noRecords')}</Empty>
+          <Empty icon={Truck}>{t('common.noRecords')}</Empty>
         ) : (
           <div className="table-scroll">
             <table>
@@ -115,7 +128,7 @@ export default function Deliveries() {
                         className="btn btn-sm btn-danger"
                         onClick={() => window.confirm(t('confirm.deleteSimple')) && dispatch({ type: 'deleteDelivery', id: d.id })}
                       >
-                        {t('btn.delete')}
+                        <Trash className="icon" aria-hidden="true" /> {t('btn.delete')}
                       </button>
                     </td>
                   </tr>

@@ -1,3 +1,4 @@
+import { ArrowLeft, CalendarDays, Tent, TriangleExclamationPoint, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { dailyDeliveredSeries, pointQualityMap, rankByPriority } from '../domain/analytics';
 import { pointQuality } from '../domain/quality';
@@ -16,8 +17,19 @@ export default function Dashboard() {
     return (
       <>
         <PageHeader title={t('nav.dashboard')} intro={t('dash.intro')} />
-        <Empty>
-          {t('dash.empty')} <Link to="/sites">{t('sites.add')}</Link> · <Link to="/data">{t('btn.import')}</Link>
+        <Empty icon={Tent}>
+          <p style={{ margin: 0 }}>{t('dash.empty')}</p>
+          <div className="empty-actions">
+            <Link className="btn btn-primary" to="/sites">
+              {t('sites.add')}
+            </Link>
+            <Link className="btn" to="/data">
+              <Upload className="icon" aria-hidden="true" /> {t('btn.import')}
+            </Link>
+            <Link className="btn btn-ghost" to="/">
+              <ArrowLeft className="icon flip-rtl" aria-hidden="true" /> {t('dash.backToSteps')}
+            </Link>
+          </div>
         </Empty>
       </>
     );
@@ -51,9 +63,10 @@ export default function Dashboard() {
       <PageHeader
         title={t('nav.dashboard')}
         intro={t('dash.intro')}
+        hint={t('dash.hint')}
         actions={
           <Link className="btn btn-primary" to="/planner">
-            {t('dash.openPlanner')}
+            <CalendarDays className="icon" aria-hidden="true" /> {t('dash.openPlanner')}
           </Link>
         }
       />
@@ -91,7 +104,10 @@ export default function Dashboard() {
             ) : (
               <ul className="alerts">
                 {alerts.slice(0, 10).map((a) => (
-                  <li key={a}>{a}</li>
+                  <li key={a}>
+                    <TriangleExclamationPoint className="icon" size={16} aria-hidden="true" />
+                    <span>{a}</span>
+                  </li>
                 ))}
                 {alerts.length > 10 && <li className="muted">+{num(alerts.length - 10)}</li>}
               </ul>

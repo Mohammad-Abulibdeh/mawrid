@@ -1,5 +1,7 @@
+import { FlaskConical, Plus, Trash, Truck } from 'lucide-react';
 import { useState } from 'react';
-import { Card, Empty, Field, PageHeader, QualityBadge, useToast } from '../components/ui';
+import { Link } from 'react-router-dom';
+import { Card, Empty, Field, JourneyBar, PageHeader, QualityBadge, useToast } from '../components/ui';
 import { evaluateTest } from '../domain/quality';
 import { newId, validateTest, type FieldError } from '../domain/validate';
 import { useI18n } from '../i18n/i18n';
@@ -32,10 +34,20 @@ export default function Quality() {
   return (
     <>
       <PageHeader
+        eyebrow={t('journey.stepOf', { n: num(3), b: num(4) })}
         title={t('nav.quality')}
         intro={t('q.intro', { d: num(ds.settings.testMaxAgeDays) })}
-        actions={<span className="pill">{t('q.mode', { mode: t(`data.mode.${mode}`) })}</span>}
+        hint={t('q.hint')}
+        actions={
+          <>
+            <span className="pill">{t('q.mode', { mode: t(`data.mode.${mode}`) })}</span>
+            <Link className="btn" to="/deliveries">
+              <Truck className="icon" aria-hidden="true" /> {t('del.add')}
+            </Link>
+          </>
+        }
       />
+      <JourneyBar current="record" />
       <Card title={t('q.add')}>
         <form className="form" onSubmit={submit} noValidate>
           <div className="row-5">
@@ -64,14 +76,14 @@ export default function Quality() {
           </div>
           <div className="form-actions">
             <button className="btn btn-primary" type="submit">
-              {t('btn.add')}
+              <Plus className="icon" aria-hidden="true" /> {t('btn.add')}
             </button>
           </div>
         </form>
       </Card>
       <Card title={`${t('nav.quality')} (${num(rows.length)})`}>
         {rows.length === 0 ? (
-          <Empty>{t('common.noRecords')}</Empty>
+          <Empty icon={FlaskConical}>{t('common.noRecords')}</Empty>
         ) : (
           <div className="table-scroll">
             <table>
@@ -107,7 +119,7 @@ export default function Quality() {
                           className="btn btn-sm btn-danger"
                           onClick={() => window.confirm(t('confirm.deleteSimple')) && dispatch({ type: 'deleteTest', id: q.id })}
                         >
-                          {t('btn.delete')}
+                          <Trash className="icon" aria-hidden="true" /> {t('btn.delete')}
                         </button>
                       </td>
                     </tr>

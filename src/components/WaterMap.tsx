@@ -9,6 +9,7 @@ import type { QualityStatus } from '../domain/quality';
 import type { WaterPoint } from '../domain/types';
 import { useI18n } from '../i18n/i18n';
 import { BAND_COLOR, SERIES_COLOR } from './charts';
+import { MARKER_SVG } from './icons';
 
 export interface WaterMapProps {
   metrics?: SiteMetrics[];
@@ -27,7 +28,7 @@ function pointState(p: WaterPoint, q: QualityStatus | undefined): 'down' | 'unsa
   if (p.status === 'partial' || q === 'warning' || q === 'untested') return 'warn';
   return 'ok';
 }
-const GLYPH = { down: '✕', unsafe: '!', warn: '◐', ok: '✓' } as const;
+const GLYPH = MARKER_SVG;
 
 function PickHandler({ onPick }: { onPick: (lat: number, lng: number) => void }) {
   useMapEvents({ click: (e) => onPick(Math.round(e.latlng.lat * 1e5) / 1e5, Math.round(e.latlng.lng * 1e5) / 1e5) });
@@ -40,7 +41,7 @@ export default function WaterMap({ metrics = [], points = [], quality, trips = [
     const make = (s: keyof typeof GLYPH, fill: boolean) =>
       L.divIcon({
         className: `pt-icon pt-${s} ${fill ? 'pt-source' : 'pt-tap'}`,
-        html: `<span>${GLYPH[s]}</span>`,
+        html: GLYPH[s],
         iconSize: [22, 22],
         iconAnchor: [11, 11],
       });
@@ -63,7 +64,7 @@ export default function WaterMap({ metrics = [], points = [], quality, trips = [
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {onPick && <PickHandler onPick={onPick} />}
-        {picked && <CircleMarker center={[picked.lat, picked.lng]} radius={8} pathOptions={{ color: '#111', weight: 3, fillOpacity: 0 }} />}
+        {picked && <CircleMarker center={[picked.lat, picked.lng]} radius={8} pathOptions={{ color: '#2a2420', weight: 3, fillOpacity: 0 }} />}
 
         {trips.map((tr) => {
           const p = pointById.get(tr.pointId);
@@ -104,7 +105,7 @@ export default function WaterMap({ metrics = [], points = [], quality, trips = [
             key={m.site.id}
             center={[m.site.lat, m.site.lng]}
             radius={5 + Math.sqrt(m.site.population) / 18}
-            pathOptions={{ color: '#ffffff', weight: 2, fillColor: BAND_COLOR[m.band], fillOpacity: 0.85 }}
+            pathOptions={{ color: '#2a2420', weight: 2, fillColor: BAND_COLOR[m.band], fillOpacity: 0.85 }}
           >
             <Popup>
               <strong>{m.site.name}</strong>

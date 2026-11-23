@@ -1,7 +1,7 @@
 # Development log
 
 ## Current phase
-**M5 complete — v0.1.0 released and live** at https://mohammad-abulibdeh.github.io/mawrid/.
+**M6 complete — v0.2.0 (interface redesign) released and live** at https://mohammad-abulibdeh.github.io/mawrid/.
 Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)).
 
 ## Status board
@@ -16,6 +16,8 @@ Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)
 | JSON/CSV import/export | ✅ | ✅ unit | ✅ |
 | Arabic RTL | ✅ | ✅ UI + manual | ✅ |
 | Offline service worker | ✅ | manual (registration/activation) | ✅ |
+| Welcome page and guided steps | ✅ | ✅ UI + journey unit + manual | ✅ |
+| Cream/ink identity, bundled fonts, SVG icons, no emoji | ✅ | ✅ automated no-emoji check + manual (desktop, phone, both languages) | ✅ |
 | Multi-device sync, fuel constraints, road distances | ❌ planned | — | — |
 
 ## Known issues
@@ -25,6 +27,19 @@ Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)
 - OpenStreetMap public tiles are suitable for demonstration only; operational use needs its own tile source.
 
 ## Log
+
+### 2026-11-23 — M6: interface redesign (v0.2.0)
+- New welcome page at `#/` (the overview moved to `#/dashboard`), a guided four-step journey with
+  progress on every step page and in the menu, tips and field help, and clearer labels.
+- New identity: cream base, ink outlines, offset shadows, soft accents; IBM Plex Sans Arabic and
+  Baloo Bhaijaan 2 bundled for offline use; Lucide icons; no emoji anywhere (enforced by a test).
+- Logic, data model and stored data unchanged; every existing test still passes, with labels
+  updated.
+- Browser check found the step bar overflowing on phones in the column layout (`flex-wrap` made the
+  line as wide as its content). Fixed and verified: no sideways scrolling on any of the 10 pages at
+  375 px in Arabic.
+- Running the tests locally on Node 26 needed an in-memory `localStorage` in the test setup (Node's
+  own global hides jsdom's); CI on Node 22 is unaffected. 66 tests passing.
 
 ### 2026-11-23 — M5: verification and documentation
 - Verified live site: dashboard, map (16 sites, 12 points, tiles), planner (100 loads, 41 routes,

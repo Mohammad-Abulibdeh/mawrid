@@ -8,7 +8,11 @@ An offline-first web app for WASH coordinators in the Gaza Strip. It shows how m
 displacement site actually gets per person per day, flags unsafe water sources, and plans
 tomorrow's water trucking so the worst-off sites are served first. English and Arabic (RTL).
 
-![Dashboard](docs/screenshots/dashboard.png)
+The app opens on a welcome page that explains the problem in plain words and walks you through
+four steps — add sites, add water sources, log deliveries and tests, get tomorrow's truck plan —
+with a progress bar and a "next step" button on every page.
+
+![Welcome page](docs/screenshots/home.png)
 
 ## The problem
 
@@ -27,7 +31,8 @@ Full research: [problem statement](docs/research/01-problem-statement.md) ·
 
 | Feature | Detail |
 |---|---|
-| **Coverage dashboard** | L/person/day per site (7-day average incl. zero days + non-trucked supply), population-weighted average, people below the 6 L critical floor, daily gap in litres and truck loads, alerts |
+| **Welcome & guided steps** | Plain-language welcome page; "Start now" goes to the next unfinished step; four-step journey with live progress; tips on every page; help under every planner field |
+| **Coverage overview** | L/person/day per site (7-day average incl. zero days + non-trucked supply), population-weighted average, people below the 6 L critical floor, daily gap in litres and truck loads, alerts |
 | **Dispatch planner** | Weighted max-min ("water-filling") allocation of truck loads: next load always goes to the site with the largest vulnerability-weighted shortfall, from the nearest safe source with water left, within a haul limit. Trip list, before/after per site, routes on a map, CSV export |
 | **Water quality gate** | FRC (normal 0.2–0.5 / outbreak 0.5–1.0 mg/L, >5 toxic), turbidity (5 / 20 NTU), E. coli. Unsafe sources are excluded from access and planning everywhere |
 | **Access check** | Distance from each site to the nearest usable tap (≤500 m), people per tap (≤250) |
@@ -42,9 +47,13 @@ The bundled dataset is **synthetic demonstration data** (labelled in the app). S
 
 ## Screenshots
 
-| Planner | Map | Arabic |
+| Arabic welcome | Truck plan | Overview |
 |---|---|---|
-| ![Planner](docs/screenshots/planner.png) | ![Map](docs/screenshots/map.png) | ![Arabic dashboard](docs/screenshots/dashboard-ar.png) |
+| ![Arabic welcome page](docs/screenshots/home-ar.png) | ![Truck plan](docs/screenshots/planner.png) | ![Overview](docs/screenshots/dashboard.png) |
+
+| Map | Arabic truck plan | Phone (Arabic) |
+|---|---|---|
+| ![Map](docs/screenshots/map.png) | ![Arabic truck plan](docs/screenshots/planner-ar.png) | ![Phone, Arabic](docs/screenshots/home-mobile-ar.png) |
 
 ## Quick start
 
@@ -61,12 +70,15 @@ Install & deploy: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
 ## Engineering
 
+- **Design:** cream-and-ink identity, IBM Plex Sans Arabic and Baloo Bhaijaan 2 (bundled, so they
+  work offline), Lucide icons, no emoji (checked by a test), full RTL including mirrored shadows
+  and arrows.
 - **Stack:** React 18 + TypeScript (strict) + Vite, Leaflet/OpenStreetMap, hand-built SVG charts,
   Vitest + Testing Library. No backend: see the architecture decision in
   [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) and [docs/architecture.md](docs/architecture.md).
 - **Domain engine** (`src/domain/`) is pure TypeScript, independent of the UI, with 99% line
   coverage.
-- **Tests:** 55 automated tests (domain + UI workflows). Report: [docs/testing/TEST_REPORT.md](docs/testing/TEST_REPORT.md).
+- **Tests:** 66 automated tests (domain, UI workflows, guided journey, design rules). Report: [docs/testing/TEST_REPORT.md](docs/testing/TEST_REPORT.md).
 - **CI/CD:** GitHub Actions runs lint, typecheck, tests with coverage and build on every push and
   PR; `main` deploys to GitHub Pages and is smoke-tested.
 
@@ -76,7 +88,7 @@ src/
   state/       store (reducer + localStorage persistence)
   i18n/        English/Arabic strings, RTL
   components/  charts, map, form fields, badges, error boundary
-  pages/       Dashboard, Map, Planner, Sites, Points, Deliveries, Quality, Data, About
+  pages/       Home (welcome), Dashboard (overview), Map, Planner, Sites, Points, Deliveries, Quality, Data, About
 tests/         domain/*.test.ts, ui/app.test.tsx
 public/        service worker, manifest, icon
 docs/          research, architecture, data schema, testing, deployment, user guide

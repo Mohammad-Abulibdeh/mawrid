@@ -1,8 +1,16 @@
 # User guide
 
-Open **https://mohammad-abulibdeh.github.io/mawrid/**. Switch language with the button at the
-top (English / العربية). The app opens with synthetic demo data so you can try everything; press
-**Start with an empty dataset** when you are ready to enter real data.
+Open **https://mohammad-abulibdeh.github.io/mawrid/**. Switch language with the two buttons at the
+top (العربية / English).
+
+The app opens on a **welcome page**. It explains the problem, shows the four steps below with your
+progress, and has a **Start now** button that always takes you to the next unfinished step. Every
+step page shows "Step n of 4", a progress bar and a **Next** button, and the side menu marks
+finished steps with a check. The app starts with synthetic sample data so you can try everything;
+on the welcome page, choose **Start with an empty workspace** when you are ready to enter real
+data.
+
+The numbers and charts are on the **Overview** page (`#/dashboard`).
 
 ## 1. Set up your sites and water points (once, then update)
 
@@ -21,7 +29,7 @@ Or import a spreadsheet: **Data & settings → CSV** — download a template, fi
 - **Water quality**: chlorine (FRC), turbidity, E. coli. A failing result immediately marks the
   source *Unsafe*: it disappears from access calculations and is never used by the planner.
 
-## 3. Read the dashboard
+## 3. Read the overview
 
 - *Average supply* is weighted by population, in litres per person per day.
 - *People below 6 L* is the critical group.
@@ -31,8 +39,8 @@ Or import a spreadsheet: **Data & settings → CSV** — download a template, fi
 
 ## 4. Plan tomorrow's trucking
 
-**Dispatch planner**: enter trucks, trips per truck, litres per load, maximum haul distance and
-the target. *Run plan* produces:
+**Truck plan**: enter trucks, trips per truck, litres per load, maximum haul distance and the
+target (each field has a short explanation under it). *Build the plan* produces:
 
 - a **trip list** (source → site, loads, litres, distance) — *Export CSV* to share it,
 - the **effect per site** (today's coverage → planned coverage),

@@ -18,7 +18,7 @@ except that the overview moved from `#/` to `#/dashboard` to make room for the w
 - Language switch with both options visible (العربية / English).
 - Tests: welcome page, guided steps, language switch, journey logic, a check that no string or
   source file contains emoji, and a check that every English string has an Arabic translation
-  (66 tests).
+  (67 tests).
 
 ### Changed
 - New visual identity: cream base, warm ink outlines with offset shadows, soft accent colours,
@@ -31,6 +31,10 @@ except that the overview moved from `#/` to `#/dashboard` to make room for the w
   "Build the plan" (was Run plan).
 - Mobile: menu with overlay, no sideways scrolling on any page, full-width main buttons.
 - Service-worker cache version bumped so returning visitors get the new interface.
+
+### Fixed
+- Arabic: "before → after" values in the plan summary and map popups read backwards; the arrow now
+  follows the reading direction.
 
 ### Removed
 - Automatic dark theme (the identity is cream-based; a warm dark variant may come back later).

@@ -145,6 +145,12 @@ describe('Arabic interface', () => {
     expect(screen.getByRole('heading', { name: 'نظرة عامة' })).toBeInTheDocument();
   });
 
+  it('points before/after arrows in the Arabic reading direction', () => {
+    renderApp('/planner?run=1', buildDemoDataset(todayIso()), 'ar');
+    expect(screen.getByText('191,000 ← 129,300')).toBeInTheDocument();
+    expect(screen.queryByText(/→/)).not.toBeInTheDocument();
+  });
+
   it('shows the Arabic welcome page with the start button', () => {
     renderApp('/', buildDemoDataset(todayIso()), 'ar');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('كل شاحنة مياه تذهب إلى من يحتاجها أكثر.');

@@ -24,7 +24,9 @@ function loadParams(): PlanParams {
 
 export default function Planner() {
   const { ds, metrics, refDate } = useStore();
-  const { t, num } = useI18n();
+  const { t, num, dir } = useI18n();
+  // "before → after": the arrow follows the reading direction so Arabic reads "before ← after".
+  const change = (before: string, after: string) => `${before} ${dir === 'rtl' ? '←' : '→'} ${after}`;
   const [form, setForm] = useState(() => {
     const p = loadParams();
     return {
@@ -163,13 +165,13 @@ export default function Planner() {
               <Kpi label={t('plan.loadsUsed')} value={t('common.of', { a: num(result.loadsUsed), b: num(result.loadsAvailable) })} />
               <Kpi label={t('plan.litres')} value={num(result.litresAllocated)} />
               <Kpi label={t('plan.km')} value={num(result.truckKm, 1)} />
-              <Kpi label={t('plan.min')} value={`${num(result.minBefore, 1)} → ${num(result.minAfter, 1)}`} tone={result.minAfter >= crit ? 'good' : 'critical'} />
+              <Kpi label={t('plan.min')} value={change(num(result.minBefore, 1), num(result.minAfter, 1))} tone={result.minAfter >= crit ? 'good' : 'critical'} />
               <Kpi
                 label={t('plan.critical', { n: num(crit) })}
-                value={`${num(result.popCriticalBefore)} → ${num(result.popCriticalAfter)}`}
+                value={change(num(result.popCriticalBefore), num(result.popCriticalAfter))}
                 tone={result.popCriticalAfter > 0 ? 'critical' : 'good'}
               />
-              <Kpi label={t('plan.meets')} value={`${num(result.popMeetsBefore)} → ${num(result.popMeetsAfter)}`} />
+              <Kpi label={t('plan.meets')} value={change(num(result.popMeetsBefore), num(result.popMeetsAfter))} />
             </div>
           </Card>
 

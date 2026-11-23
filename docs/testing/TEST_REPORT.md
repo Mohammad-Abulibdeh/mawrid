@@ -2,7 +2,7 @@
 
 Date: 2026-11-23 · Commit range: M1–M5 · Runner: Vitest 2.1.8 (jsdom), Node 22 in CI.
 
-## Automated tests — 66 passing
+## Automated tests — 67 passing
 
 | Suite | File | Tests | What it covers |
 |---|---|---|---|
@@ -10,7 +10,7 @@ Date: 2026-11-23 · Commit range: M1–M5 · Runner: Vitest 2.1.8 (jsdom), Node 
 | Analytics | `tests/domain/analytics.test.ts` | 9 | Haversine distance, 7-day averaging with zero days, bands, per-capita/gap, unsafe points excluded from access, priority ranking, summary KPIs, daily series |
 | Planner | `tests/domain/planner.test.ts` | 11 | Max-min fairness, equalisation, target stop, source capacity + `sourcesExhausted`, exclusion of down/unsafe/tap/untested sources, haul limit, nearest source, vulnerability tie-break, no over-serving, plans from non-trucked baseline, demo-scale improvement without exceeding capacity |
 | Data | `tests/domain/data.test.ts` | 18 | CSV round-trip (quotes/newlines/BOM/CRLF), formula-injection neutralisation, strict ISO dates, form/CSV validation, Gaza bounds, references and future dates, dataset import with error report, schema version, CSV import for every entity, documented example files, demo determinism and self-validation |
-| UI integration | `tests/ui/app.test.tsx` | 13 | Overview KPIs + demo banner + unsafe-source alert; empty state; full **site → water point → delivery** workflow incl. validation errors and coverage band change; unsafe quality result; planner trip list never using unsafe source; shared `?run=1` link; parameter validation; Arabic RTL rendering; welcome page → step 1; next-step tracking through building a plan; switching to an empty workspace; language switch; Arabic welcome page |
+| UI integration | `tests/ui/app.test.tsx` | 14 | Overview KPIs + demo banner + unsafe-source alert; empty state; full **site → water point → delivery** workflow incl. validation errors and coverage band change; unsafe quality result; planner trip list never using unsafe source; shared `?run=1` link; parameter validation; Arabic RTL rendering; welcome page → step 1; next-step tracking through building a plan; switching to an empty workspace; language switch; Arabic welcome page; Arabic before/after arrows |
 | Guided journey & design rules | `tests/ui/journey.test.ts` | 6 | Step completion rules, next step, plan flag; no emoji in any string or source file; every English string has an Arabic translation |
 
 ## Coverage (domain layer, `src/domain/**`)
@@ -56,6 +56,8 @@ Performed on https://mohammad-abulibdeh.github.io/mawrid/ after deployment:
 | 5 | UI test | Validation messages were inside `<label>`, polluting the accessible name of inputs | Error/help text moved outside the label element |
 | 6 | Browser | Lowest site stayed low with no explanation | Planner reports `sourcesExhausted` per site; UI shows "Nearby sources ran dry" |
 | 7 | Browser (v0.2.0) | On phones the step bar made pages scroll sideways (column flex with `wrap` sized the line to its content) | `nowrap` + `min-width: 0` in the narrow layout; verified at 375 px on all 10 pages in Arabic |
+| 8 | Live screenshot (v0.2.0) | Opening a shared `?run=1` link built the plan, but the menu did not mark step 4 done (child effect fired before the menu subscribed) | `usePlanMade()` re-reads after subscribing; regression test fails without the fix |
+| 9 | Live screenshot (v0.2.0) | In Arabic, "before → after" values read backwards (`0.0 → 2.2` displayed as `2.2 → 0.0`) | Arrow follows reading direction (`←` in Arabic), also in map route popups; test added |
 
 ## Not covered by automated tests
 

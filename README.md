@@ -78,7 +78,7 @@ Install & deploy: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
   [docs/PROJECT_PLAN.md](docs/PROJECT_PLAN.md) and [docs/architecture.md](docs/architecture.md).
 - **Domain engine** (`src/domain/`) is pure TypeScript, independent of the UI, with 99% line
   coverage.
-- **Tests:** 66 automated tests (domain, UI workflows, guided journey, design rules). Report: [docs/testing/TEST_REPORT.md](docs/testing/TEST_REPORT.md).
+- **Tests:** 67 automated tests (domain, UI workflows, guided journey, design rules). Report: [docs/testing/TEST_REPORT.md](docs/testing/TEST_REPORT.md).
 - **CI/CD:** GitHub Actions runs lint, typecheck, tests with coverage and build on every push and
   PR; `main` deploys to GitHub Pages and is smoke-tested.
 

@@ -36,7 +36,7 @@ function PickHandler({ onPick }: { onPick: (lat: number, lng: number) => void })
 }
 
 export default function WaterMap({ metrics = [], points = [], quality, trips = [], radiusM, height = 520, onPick, picked }: WaterMapProps) {
-  const { t, num } = useI18n();
+  const { t, num, dir } = useI18n();
   const icons = useMemo(() => {
     const make = (s: keyof typeof GLYPH, fill: boolean) =>
       L.divIcon({
@@ -80,7 +80,7 @@ export default function WaterMap({ metrics = [], points = [], quality, trips = [
               pathOptions={{ color: SERIES_COLOR, weight: 2 + (4 * tr.loads) / maxLoads, opacity: 0.75 }}
             >
               <Popup>
-                {p.name} → {s.name}
+                {p.name} {dir === 'rtl' ? '←' : '→'} {s.name}
                 <br />
                 {num(tr.loads)} × · {num(tr.litres)} L · {t('common.km', { n: num(tr.distanceKm, 1) })}
               </Popup>

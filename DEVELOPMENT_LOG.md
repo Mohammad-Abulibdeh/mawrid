@@ -39,7 +39,10 @@ Next phase: field validation and multi-device sync (see [ROADMAP.md](ROADMAP.md)
   line as wide as its content). Fixed and verified: no sideways scrolling on any of the 10 pages at
   375 px in Arabic.
 - Running the tests locally on Node 26 needed an in-memory `localStorage` in the test setup (Node's
-  own global hides jsdom's); CI on Node 22 is unaffected. 66 tests passing.
+  own global hides jsdom's); CI on Node 22 is unaffected.
+- Checking the live screenshots found two more bugs, both fixed with tests: a shared `?run=1` link
+  did not tick step 4 in the menu, and Arabic "before → after" values read backwards (arrow now
+  `←` in Arabic). 67 tests passing.
 
 ### 2026-11-23 — M5: verification and documentation
 - Verified live site: dashboard, map (16 sites, 12 points, tiles), planner (100 loads, 41 routes,
